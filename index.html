@@ -8,7 +8,7 @@
 </head>
 <body>
   <header>
-    <img src="logo.png" class="logo" />
+    <img src="logo.png" class="logo" alt="Gigs4Gigs Logo" />
     <h1>Gigs4Gigs</h1>
     <p class="tagline">Because Short Gigs Matter</p>
   </header>
@@ -33,5 +33,40 @@
   <footer>
     <p>&copy; 2025 Gigs4Gigs. Built by Kenyans, for Kenya.</p>
   </footer>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js"></script>
+
+  <script>
+    // Replace this with your actual Firebase config
+    const firebaseConfig = {
+  apiKey: "AIzaSyBQSl1HtlJBPRBcgt5culdCDj_cBVN40Io",
+  authDomain: "offer-upload.firebaseapp.com",
+  projectId: "offer-upload",
+  storageBucket: "offer-upload.firebasestorage.app",
+  messagingSenderId: "147934510488",
+  appId: "1:147934510488:web:e926fae880569d9475bfed",
+  measurementId: "G-X568GL5EJT"
+};
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Sign in with Google on button click
+    document.querySelector('.google-signin').addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          console.log("Signed in as:", result.user.displayName);
+          window.location.href = "dashboard.html";
+        })
+        .catch(error => {
+          console.error("Sign-in error:", error);
+          alert("Failed to sign in: " + error.message);
+        });
+    });
+  </script>
 </body>
 </html>
