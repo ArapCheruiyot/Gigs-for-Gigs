@@ -22,22 +22,39 @@ firebase.auth().onAuthStateChanged((user) => {
 });
 
 // Log out
-document.getElementById("logout-btn").addEventListener("click", () => {
-  firebase.auth().signOut().then(() => {
-    window.location.href = "index.html";
+// Wait for DOM to fully load
+document.addEventListener("DOMContentLoaded", () => {
+  // Welcome message
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      document.getElementById("welcome-message").textContent = `Welcome, ${user.displayName || "Friend"}`;
+    } else {
+      window.location.href = "index.html";
+    }
   });
-});
 
-// Tab switching
-document.querySelectorAll('.tab-button').forEach(button => {
-  button.addEventListener('click', () => {
-    // Switch active tab button
-    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-    button.classList.add('active');
+  // Log out
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      firebase.auth().signOut().then(() => {
+        window.location.href = "index.html";
+      });
+    });
+  }
 
-    // Switch active section
-    document.querySelectorAll('.tab-section').forEach(section => section.classList.remove('active'));
-    const target = button.dataset.target;
-    document.getElementById(target).classList.add('active');
+  // Tab switching
+  const tabButtons = document.querySelectorAll(".tab-button");
+  tabButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      // Remove 'active' from all
+      tabButtons.forEach(btn => btn.classList.remove("active"));
+      document.querySelectorAll(".tab-section").forEach(section => section.classList.remove("active"));
+
+      // Activate clicked tab
+      button.classList.add("active");
+      const target = button.getAttribute("data-target");
+      document.getElementById(target).classList.add("active");
+    });
   });
 });
