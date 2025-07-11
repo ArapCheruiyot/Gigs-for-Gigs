@@ -35,43 +35,18 @@ document.addEventListener("DOMContentLoaded", () => {
       form.addEventListener("submit", handleRegistrationFormSubmit);
     });
   }
-
-  // ✅ Form submission handler
-  function handleRegistrationFormSubmit(e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const fullName = form.fullName.value;
-    const alias = form.alias.value;
-    const skills = form.skills.value;
-
-    // File inputs
-    const passport = form.passport.files[0];
-    const idCard = form.idCard.files[0];
-    const conduct = form.conduct.files[0];
-
-    // 🔔 Just show alert for now – integrate Cloudinary & Firebase later
-    alert(`
-      ✅ Form captured:
-      Name: ${fullName}
-      Alias: ${alias}
-      Skills: ${skills}
-      Passport: ${passport?.name}
-      ID Card: ${idCard?.name}
-      Conduct: ${conduct?.name}
-    `);
-  }
 });
-// CLOUDINARY INFO
-const CLOUD_NAME = "decckqobb";
-const UPLOAD_PRESET = "gigs4gigs_unsigned";
 
-// Uploads a single image file to Cloudinary
+// ✅ Declare only once (check before setting)
+if (!window.CLOUD_NAME) window.CLOUD_NAME = "decckqobb";
+if (!window.UPLOAD_PRESET) window.UPLOAD_PRESET = "gigs4gigs_unsigned";
+
+// ✅ Cloudinary Upload Helper
 async function uploadToCloudinary(file) {
-  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
+  const url = `https://api.cloudinary.com/v1_1/${window.CLOUD_NAME}/upload`;
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", UPLOAD_PRESET);
+  formData.append("upload_preset", window.UPLOAD_PRESET);
 
   const response = await fetch(url, {
     method: "POST",
@@ -79,10 +54,10 @@ async function uploadToCloudinary(file) {
   });
 
   const data = await response.json();
-  return data.secure_url; // This is the hosted image URL
+  return data.secure_url;
 }
 
-// Handle form submission
+// ✅ Final Working Form Handler
 async function handleRegistrationFormSubmit(e) {
   e.preventDefault();
 
@@ -90,25 +65,21 @@ async function handleRegistrationFormSubmit(e) {
   const fullName = form.fullName.value;
   const alias = form.alias.value;
   const skills = form.skills.value;
-
-  // Get uploaded files
   const passportFile = form.passport.files[0];
   const idCardFile = form.idCard.files[0];
   const conductFile = form.conduct.files[0];
 
   try {
-    // Show simple feedback
-    form.querySelector("button[type='submit']").disabled = true;
-    form.querySelector("button[type='submit']").innerText = "Submitting...";
+    const submitBtn = form.querySelector("button[type='submit']");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
 
-    // Upload images to Cloudinary
     const [passportUrl, idCardUrl, conductUrl] = await Promise.all([
       uploadToCloudinary(passportFile),
       uploadToCloudinary(idCardFile),
       uploadToCloudinary(conductFile)
     ]);
 
-    // Save data to Firestore
     const user = firebase.auth().currentUser;
     if (user) {
       const db = firebase.firestore();
@@ -122,16 +93,17 @@ async function handleRegistrationFormSubmit(e) {
         registeredAt: new Date()
       });
 
-      alert("Registration successful!");
+      alert("✅ Registration successful!");
       form.style.display = "none";
     } else {
-      alert("User not authenticated.");
+      alert("❌ User not authenticated.");
     }
-  } catch (err) {
-    console.error(err);
-    alert("Error during registration. Try again.");
+  } catch (error) {
+    console.error("Upload error:", error);
+    alert("❌ Something went wrong during registration.");
   } finally {
-    form.querySelector("button[type='submit']").disabled = false;
-    form.querySelector("button[type='submit']").innerText = "Submit Registration";
+    const submitBtn = form.querySelector("button[type='submit']");
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Submit Registration";
   }
 }
