@@ -102,3 +102,27 @@ body {
 #registration-form-container button:hover {
   background-color: #0057b8;
 }
+.job-card {
+  border: 2px solid #0077cc;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 20px auto;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.job-card img.job-passport {
+  width: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.job-card .badge {
+  margin-top: 15px;
+  background-color: #00c851;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+}
