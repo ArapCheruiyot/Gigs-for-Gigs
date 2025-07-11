@@ -62,3 +62,76 @@ document.addEventListener("DOMContentLoaded", () => {
     `);
   }
 });
+// CLOUDINARY INFO
+const CLOUD_NAME = "decckqobb";
+const UPLOAD_PRESET = "gigs4gigs_unsigned";
+
+// Uploads a single image file to Cloudinary
+async function uploadToCloudinary(file) {
+  const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET);
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await response.json();
+  return data.secure_url; // This is the hosted image URL
+}
+
+// Handle form submission
+async function handleRegistrationFormSubmit(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const fullName = form.fullName.value;
+  const alias = form.alias.value;
+  const skills = form.skills.value;
+
+  // Get uploaded files
+  const passportFile = form.passport.files[0];
+  const idCardFile = form.idCard.files[0];
+  const conductFile = form.conduct.files[0];
+
+  try {
+    // Show simple feedback
+    form.querySelector("button[type='submit']").disabled = true;
+    form.querySelector("button[type='submit']").innerText = "Submitting...";
+
+    // Upload images to Cloudinary
+    const [passportUrl, idCardUrl, conductUrl] = await Promise.all([
+      uploadToCloudinary(passportFile),
+      uploadToCloudinary(idCardFile),
+      uploadToCloudinary(conductFile)
+    ]);
+
+    // Save data to Firestore
+    const user = firebase.auth().currentUser;
+    if (user) {
+      const db = firebase.firestore();
+      await db.collection("service_providers").doc(user.uid).set({
+        fullName,
+        alias,
+        skills,
+        passportUrl,
+        idCardUrl,
+        conductUrl,
+        registeredAt: new Date()
+      });
+
+      alert("Registration successful!");
+      form.style.display = "none";
+    } else {
+      alert("User not authenticated.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error during registration. Try again.");
+  } finally {
+    form.querySelector("button[type='submit']").disabled = false;
+    form.querySelector("button[type='submit']").innerText = "Submit Registration";
+  }
+}
