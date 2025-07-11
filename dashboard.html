@@ -6,11 +6,12 @@
   <title>Gigs Dashboard</title>
   <link rel="stylesheet" href="dashboard.css" />
 
-  <!-- Firebase (Compat versions) -->
+  <!-- ✅ Firebase for plain HTML -->
   <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore-compat.js"></script>
 
-  <!-- Firebase Config -->
+  <!-- ✅ Firebase Config -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyBQSl1HtlJBPRBcgt5culdCDj_cBVN40Io",
@@ -21,11 +22,14 @@
       appId: "1:147934510488:web:e926fae880569d9475bfed",
       measurementId: "G-X568GL5EJT"
     };
-
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
   </script>
+
+  <!-- ✅ Load JS after Firebase config -->
+  <script src="dashboard.js" defer></script>
+  <script src="registration.js" defer></script>
 </head>
+
 <body>
   <!-- Top Hero Section -->
   <header class="hero">
