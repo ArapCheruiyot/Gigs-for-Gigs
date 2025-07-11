@@ -1,11 +1,12 @@
 // Your Firebase config here
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBQSl1HtlJBPRBcgt5culdCDj_cBVN40Io",
+  authDomain: "offer-upload.firebaseapp.com",
+  projectId: "offer-upload",
+  storageBucket: "offer-upload.firebasestorage.app",
+  messagingSenderId: "147934510488",
+  appId: "1:147934510488:web:e926fae880569d9475bfed",
+  measurementId: "G-X568GL5EJT"
 };
 
 firebase.initializeApp(firebaseConfig);
