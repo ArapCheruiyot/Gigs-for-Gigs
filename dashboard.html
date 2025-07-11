@@ -26,8 +26,16 @@
   <!-- Sections -->
   <main>
     <section id="finder" class="tab-section active">
-      <h3>Gigs Finder Area</h3>
-      <p>List of available gigs will appear here...</p>
+     <!-- Inside your #gig-finder section -->
+<div class="gig-finder-content">
+  <button id="register-btn" class="primary-btn">Register as a Service Provider</button>
+
+  <!-- Hidden registration form placeholder -->
+  <div id="registration-form-container" style="display: none;">
+    <!-- We'll populate this dynamically using registration.js -->
+  </div>
+</div>
+
     </section>
 
     <section id="giver" class="tab-section">
