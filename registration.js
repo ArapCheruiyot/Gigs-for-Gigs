@@ -95,6 +95,15 @@ async function handleRegistrationFormSubmit(e) {
 
       alert("✅ Registration successful!");
       form.style.display = "none";
+      displayJobCard({
+  fullName,
+  alias,
+  skills,
+  passportUrl,
+  idCardUrl,
+  conductUrl
+});
+
     } else {
       alert("❌ User not authenticated.");
     }
@@ -106,4 +115,22 @@ async function handleRegistrationFormSubmit(e) {
     submitBtn.disabled = false;
     submitBtn.innerText = "Submit Registration";
   }
+}
+function displayJobCard(data) {
+  const formContainer = document.getElementById("registration-form-container");
+
+  formContainer.innerHTML = `
+    <div class="job-card">
+      <img src="${data.passportUrl}" alt="Passport Photo" class="job-passport" />
+      <h3>${data.fullName} (${data.alias})</h3>
+      <p><strong>Skills:</strong> ${data.skills}</p>
+
+      <div class="job-docs">
+        <p><a href="${data.idCardUrl}" target="_blank">View ID Card</a></p>
+        <p><a href="${data.conductUrl}" target="_blank">View Good Conduct</a></p>
+      </div>
+
+      <p class="badge">✅ Verified Service Provider</p>
+    </div>
+  `;
 }
