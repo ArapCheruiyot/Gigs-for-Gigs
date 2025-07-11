@@ -64,3 +64,41 @@ body {
 .tab-section.active {
   display: block;
 }
+/* Registration form container */
+#registration-form-container {
+  margin-top: 20px;
+  background-color: #f8f9ff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#registration-form-container input[type="text"],
+#registration-form-container input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+#registration-form-container label {
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+  display: block;
+}
+
+#registration-form-container button {
+  padding: 10px 20px;
+  background-color: #004080;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#registration-form-container button:hover {
+  background-color: #0057b8;
+}
