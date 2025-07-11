@@ -5,9 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gigs Dashboard</title>
   <link rel="stylesheet" href="dashboard.css" />
+
+  <!-- Firebase (Compat versions) -->
   <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
-  <script src="registration.js"></script>
+
+  <!-- Firebase Config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBQSl1HtlJBPRBcgt5culdCDj_cBVN40Io",
+      authDomain: "offer-upload.firebaseapp.com",
+      projectId: "offer-upload",
+      storageBucket: "offer-upload.appspot.com",
+      messagingSenderId: "147934510488",
+      appId: "1:147934510488:web:e926fae880569d9475bfed",
+      measurementId: "G-X568GL5EJT"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
 </head>
 <body>
   <!-- Top Hero Section -->
@@ -27,16 +44,14 @@
   <!-- Sections -->
   <main>
     <section id="finder" class="tab-section active">
-     <!-- Inside your #gig-finder section -->
-<div class="gig-finder-content">
-  <button id="register-btn" class="primary-btn">Register as a Service Provider</button>
+      <div class="gig-finder-content">
+        <button id="register-btn" class="primary-btn">Register as a Service Provider</button>
 
-  <!-- Hidden registration form placeholder -->
-  <div id="registration-form-container" style="display: none;">
-    <!-- We'll populate this dynamically using registration.js -->
-  </div>
-</div>
-
+        <!-- Hidden registration form container -->
+        <div id="registration-form-container" style="display: none;">
+          <!-- Injected by registration.js -->
+        </div>
+      </div>
     </section>
 
     <section id="giver" class="tab-section">
@@ -45,6 +60,8 @@
     </section>
   </main>
 
+  <!-- Scripts -->
   <script src="dashboard.js"></script>
+  <script src="registration.js"></script>
 </body>
 </html>
