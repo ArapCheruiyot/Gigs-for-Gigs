@@ -139,44 +139,49 @@ function displayJobCard(data) {
         <p><a href="${data.conductUrl}" target="_blank">📎 View Good Conduct</a></p>
       </div>
 
-     <div class="status-toggle">
-  <label for="availability-toggle">Availability:</label>
-  <select id="availability-toggle">
-    <option value="available" ${data.status === "available" ? "selected" : ""}>✅ Available</option>
-    <option value="unavailable" ${data.status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
-  </select>
-</div>
+      <div class="status-toggle">
+        <label for="availability-toggle">Availability:</label>
+        <select id="availability-toggle">
+          <option value="available" ${data.status === "available" ? "selected" : ""}>✅ Available</option>
+          <option value="unavailable" ${data.status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
+        </select>
+      </div>
 
-<!-- 🆕 Location Display & Edit -->
-<div class="location-display">
-  <label for="location-input">Location:</label>
-  <input type="text" id="location-input" value="${data.location || ''}" placeholder="Enter your location" />
-</div>
-
+      <div class="location-display">
+        <label for="location-input">Location:</label>
+        <input type="text" id="location-input" value="${data.location || ''}" placeholder="Enter your location..." />
+      </div>
 
       <p class="badge">✅ Verified Service Provider</p>
     </div>
   `;
 
-  // Update status to Firestore
   const user = firebase.auth().currentUser;
   if (user) {
+    const db = firebase.firestore();
+
+    // ✅ Update availability
     const statusSelect = document.getElementById("availability-toggle");
-    statusSelect.addEventListener("change", async (e) => {
-      const newStatus = e.target.value;
-      const db = firebase.firestore();
-      await db.collection("service_providers").doc(user.uid).update({
-        status: newStatus
+    if (statusSelect) {
+      statusSelect.addEventListener("change", async (e) => {
+        const newStatus = e.target.value;
+        await db.collection("service_providers").doc(user.uid).update({
+          status: newStatus
+        });
+        alert("Status updated successfully!");
       });
-      alert("Status updated successfully!");
-    });
+    }
+
+    // ✅ Update location
+    const locationInput = document.getElementById("location-input");
+    if (locationInput) {
+      locationInput.addEventListener("blur", async () => {
+        const newLocation = locationInput.value.trim();
+        await db.collection("service_providers").doc(user.uid).update({
+          location: newLocation
+        });
+        alert("Location updated successfully!");
+      });
+    }
   }
 }
-const locationInput = document.getElementById("location-input");
-locationInput.addEventListener("blur", async () => {
-  const newLocation = locationInput.value;
-  await db.collection("service_providers").doc(user.uid).update({
-    location: newLocation
-  });
-  alert("Location updated successfully!");
-});
