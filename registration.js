@@ -1,3 +1,10 @@
+// ✅ Add this near the top of registration.js
+async function reverseGeocode(lat, lon) {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.display_name || "Unknown Location";
+}
 document.addEventListener("DOMContentLoaded", () => {
   const registrationBtn = document.getElementById("register-btn");
   const formContainer = document.getElementById("registration-form-container");
@@ -157,10 +164,34 @@ function displayJobCard(data) {
   const statusSelect = document.getElementById("availability-toggle");
   if (statusSelect) {
     statusSelect.addEventListener("change", async (e) => {
-      const newStatus = e.target.value;
-      await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
-      alert("✅ Availability updated");
-    });
+  const newStatus = e.target.value;
+
+  // ✅ Update Firestore with new status
+  await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
+  alert("✅ Availability updated!");
+
+  // ✅ If status is 'available', try to get location
+  if (newStatus === "available") {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        const address = await reverseGeocode(latitude, longitude);
+
+        const locationInput = document.getElementById("location-input");
+        if (locationInput) locationInput.value = address;
+
+        await db.collection("service_providers").doc(user.uid).update({ location: address });
+        alert("📍 Location updated: " + address);
+      }, (error) => {
+        alert("⚠️ Could not get location.");
+        console.error("Geolocation error:", error);
+      });
+    } else {
+      alert("❌ Geolocation not supported in this browser.");
+    }
+  }
+});
+
   }
 
   const locationInput = document.getElementById("location-input");
