@@ -199,3 +199,8 @@ body {
 }
 
 /* ⏹ Activity, History, FAQs styling can follow similarly */
+/* Hide the registration form container & job card unless Profile tab is active */
+.sub-tab-content:not(#profile-tab) #registration-form-container {
+  display: none !important;
+}
+
