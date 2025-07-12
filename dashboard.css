@@ -96,11 +96,11 @@ body {
 
 /* 🧾 Sub-tab Content Area */
 .gig-finder-content {
-  margin-left: 190px;
   padding: 20px;
   background-color: #ffffff;
   border-radius: 8px;
 }
+
 
 .sub-tab-content {
   display: none;
@@ -224,4 +224,6 @@ body {
   gap: 30px;
   flex-wrap: wrap;
 }
-
+.primary-btn {
+  margin-bottom: 20px;
+}
