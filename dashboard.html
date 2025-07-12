@@ -47,15 +47,53 @@
   <!-- Sections -->
   <main>
     <section id="finder" class="tab-section active">
-      <div class="gig-finder-content">
-        <button id="register-btn" class="primary-btn">Register as a Service Provider</button>
+  <div class="gig-finder-tabs">
+    <button class="sub-tab-button active" data-target="profile-tab">Profile</button>
+    <button class="sub-tab-button" data-target="activity-tab">Activity</button>
+    <button class="sub-tab-button" data-target="history-tab">History</button>
+    <button class="sub-tab-button" data-target="faqs-tab">FAQs</button>
+  </div>
 
-        <!-- Hidden registration form container -->
-        <div id="registration-form-container" style="display: none;">
-          <!-- Injected by registration.js -->
-        </div>
-      </div>
-    </section>
+  <!-- ✅ Tabs Content Area -->
+  <div class="gig-finder-content">
+    
+    <!-- 🧍 Profile Tab -->
+    <div id="profile-tab" class="sub-tab-content active">
+      <button id="register-btn" class="primary-btn">Register as a Service Provider</button>
+      <div id="registration-form-container" style="display: none;"></div>
+    </div>
+
+    <!-- ⚡ Activity Tab -->
+    <div id="activity-tab" class="sub-tab-content">
+      <h3>My Skills</h3>
+      <form id="skill-form">
+        <input type="text" id="new-skill" placeholder="Add a skill..." required />
+        <button type="submit">Add Skill</button>
+      </form>
+      <ul id="skill-list"></ul>
+    </div>
+
+    <!-- 📖 History Tab -->
+    <div id="history-tab" class="sub-tab-content">
+      <h3>Gig History</h3>
+      <p>You haven’t completed any gigs yet.</p>
+      <!-- Placeholder, to be dynamic later -->
+    </div>
+
+    <!-- ❓ FAQs Tab -->
+    <div id="faqs-tab" class="sub-tab-content">
+      <h3>Frequently Asked Questions</h3>
+      <ul>
+        <li><strong>How do I get gigs?</strong> — Make sure your location is active and you've listed your skills.</li>
+        <li><strong>Can I edit my skills?</strong> — Yes, head to the Activity tab to add or remove skills.</li>
+        <li><strong>Why am I not getting gigs?</strong> — Make sure you're marked as available and have relevant skills.</li>
+        <li><strong>Is it safe?</strong> — Yes, we verify every provider using ID and Good Conduct.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
 
     <section id="giver" class="tab-section">
       <h3>Gigs Giver Area</h3>
