@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <input type="file" name="conduct" accept="image/*" required />
 
           <label>Skills (comma-separated)</label>
-          <input type="text" name="skills" placeholder="e.g. Cleaning, Cooking" required />
+          <input type="text" name="skills" required />
 
           <button type="submit">Submit Registration</button>
         </form>
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-console.log("🧱 Job card inserted:", formContainer.innerHTML);
+
 if (!window.CLOUD_NAME) window.CLOUD_NAME = "decckqobb";
 if (!window.UPLOAD_PRESET) window.UPLOAD_PRESET = "gigs4gigs_unsigned";
 
@@ -46,11 +46,7 @@ async function uploadToCloudinary(file) {
   formData.append("file", file);
   formData.append("upload_preset", window.UPLOAD_PRESET);
 
-  const response = await fetch(url, {
-    method: "POST",
-    body: formData
-  });
-
+  const response = await fetch(url, { method: "POST", body: formData });
   const data = await response.json();
   return data.secure_url;
 }
@@ -74,7 +70,7 @@ async function handleRegistrationFormSubmit(e) {
     const [passportUrl, idCardUrl, conductUrl] = await Promise.all([
       uploadToCloudinary(passportFile),
       uploadToCloudinary(idCardFile),
-      uploadToCloudinary(conductFile)
+      uploadToCloudinary(conductFile),
     ]);
 
     const user = firebase.auth().currentUser;
@@ -89,11 +85,12 @@ async function handleRegistrationFormSubmit(e) {
         conductUrl,
         status: "available",
         location: "Not Set",
-        registeredAt: new Date()
+        registeredAt: new Date(),
       });
 
       alert("✅ Registration successful!");
       form.style.display = "none";
+
       displayJobCard({
         fullName,
         alias,
@@ -102,30 +99,28 @@ async function handleRegistrationFormSubmit(e) {
         idCardUrl,
         conductUrl,
         status: "available",
-        location: "Not Set"
+        location: "Not Set",
       });
     } else {
       alert("❌ User not authenticated.");
     }
-  } catch (error) {
-    console.error("Upload error:", error);
-    alert("❌ Something went wrong during registration.");
-  } finally {
-    const submitBtn = form.querySelector("button[type='submit']");
-    submitBtn.disabled = false;
-    submitBtn.innerText = "Submit Registration";
+  } catch (err) {
+    console.error("Registration failed:", err);
+    alert("❌ Something went wrong.");
   }
 }
 
+// ✅ Final version
 function displayJobCard(data) {
-  console.log("🔥 displayJobCard() called with data:", data); // Add this
+  console.log("🔥 displayJobCard() called with data:", data);
+
   const formContainer = document.getElementById("registration-form-container");
   formContainer.style.display = "block";
 
   formContainer.innerHTML = `
     <div class="job-card">
       <div class="job-card-header">
-        <img src="${data.passportUrl}" alt="Passport Photo" class="job-passport" />
+        <img src="${data.passportUrl}" class="job-passport" />
         <div class="job-info">
           <h3>${data.fullName}</h3>
           <p class="alias">(${data.alias})</p>
@@ -145,9 +140,9 @@ function displayJobCard(data) {
         </select>
       </div>
 
-      <div class="location-display" style="margin-top: 10px;">
+      <div class="location-display">
         <label for="location-input">Location:</label>
-        <input type="text" id="location-input" value="${data.location || ''}" placeholder="Enter your location" />
+        <input type="text" id="location-input" value="${data.location || ""}" placeholder="Enter your location" />
       </div>
 
       <p class="badge">✅ Verified Service Provider</p>
@@ -155,31 +150,32 @@ function displayJobCard(data) {
   `;
 
   const user = firebase.auth().currentUser;
-  if (user) {
-    const db = firebase.firestore();
+  if (!user) return;
 
-    const statusSelect = document.getElementById("availability-toggle");
-    if (statusSelect) {
-      statusSelect.addEventListener("change", async (e) => {
-        const newStatus = e.target.value;
-        await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
-        alert("✅ Availability updated!");
-      });
-    }
+  const db = firebase.firestore();
 
-    const locationInput = document.getElementById("location-input");
-    if (locationInput) {
-      locationInput.addEventListener("blur", async () => {
-        const newLocation = locationInput.value.trim();
-        if (newLocation) {
-          await db.collection("service_providers").doc(user.uid).update({ location: newLocation });
-          alert("📍 Location updated!");
-        }
-      });
-    }
+  const statusSelect = document.getElementById("availability-toggle");
+  if (statusSelect) {
+    statusSelect.addEventListener("change", async (e) => {
+      const newStatus = e.target.value;
+      await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
+      alert("✅ Availability updated");
+    });
+  }
+
+  const locationInput = document.getElementById("location-input");
+  if (locationInput) {
+    locationInput.addEventListener("blur", async () => {
+      const newLocation = locationInput.value.trim();
+      if (newLocation) {
+        await db.collection("service_providers").doc(user.uid).update({ location: newLocation });
+        alert("📍 Location updated");
+      }
+    });
   }
 }
 
+// ✅ Show card if already logged in
 firebase.auth().onAuthStateChanged(async (user) => {
   if (user) {
     const doc = await firebase.firestore().collection("service_providers").doc(user.uid).get();
