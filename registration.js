@@ -185,3 +185,12 @@ function displayJobCard(data) {
     }
   }
 }
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (user) {
+    const doc = await firebase.firestore().collection("service_providers").doc(user.uid).get();
+    if (doc.exists) {
+      displayJobCard(doc.data());
+    }
+  }
+});
+
