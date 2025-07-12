@@ -205,4 +205,22 @@ body {
   display: block;
 }
 
-/* 🔧 Activity, History, FAQs can be styled below */
+
+.location-display {
+  margin-top: 15px;
+}
+
+.location-display label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.location-display input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
