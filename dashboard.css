@@ -126,3 +126,13 @@ body {
   border-radius: 5px;
   font-weight: bold;
 }
+.sub-tab-content {
+  display: none;
+}
+.sub-tab-content.active {
+  display: block;
+}
+.sub-tab-button.active {
+  background-color: #003366;
+  color: white;
+}
