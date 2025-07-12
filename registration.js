@@ -84,14 +84,16 @@ async function handleRegistrationFormSubmit(e) {
     if (user) {
       const db = firebase.firestore();
       await db.collection("service_providers").doc(user.uid).set({
-        fullName,
-        alias,
-        skills,
-        passportUrl,
-        idCardUrl,
-        conductUrl,
-        registeredAt: new Date()
-      });
+  fullName,
+  alias,
+  skills,
+  passportUrl,
+  idCardUrl,
+  conductUrl,
+  status: "available",            // <-- Default status
+  location: "Not Set",            // <-- Placeholder location
+  registeredAt: new Date()
+});
 
       alert("✅ Registration successful!");
       form.style.display = "none";
@@ -101,7 +103,9 @@ async function handleRegistrationFormSubmit(e) {
   skills,
   passportUrl,
   idCardUrl,
-  conductUrl
+  conductUrl,
+  status: "available",
+  location: "Not Set"
 });
 
     } else {
@@ -135,13 +139,20 @@ function displayJobCard(data) {
         <p><a href="${data.conductUrl}" target="_blank">📎 View Good Conduct</a></p>
       </div>
 
-      <div class="status-toggle">
-        <label for="availability-toggle">Availability:</label>
-        <select id="availability-toggle">
-          <option value="available" ${data.status === "available" ? "selected" : ""}>✅ Available</option>
-          <option value="unavailable" ${data.status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
-        </select>
-      </div>
+     <div class="status-toggle">
+  <label for="availability-toggle">Availability:</label>
+  <select id="availability-toggle">
+    <option value="available" ${data.status === "available" ? "selected" : ""}>✅ Available</option>
+    <option value="unavailable" ${data.status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
+  </select>
+</div>
+
+<!-- 🆕 Location Display & Edit -->
+<div class="location-display">
+  <label for="location-input">Location:</label>
+  <input type="text" id="location-input" value="${data.location || ''}" placeholder="Enter your location" />
+</div>
+
 
       <p class="badge">✅ Verified Service Provider</p>
     </div>
