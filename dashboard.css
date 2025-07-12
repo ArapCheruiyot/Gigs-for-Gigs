@@ -81,13 +81,12 @@ body {
 
 
 #finder .sub-tab-button {
-  padding: 10px;
+  padding: 10px 20px;
   background-color: #ccc;
   border: none;
   cursor: pointer;
-  width: 150px;
-  text-align: left;
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 #finder .sub-tab-button.active {
