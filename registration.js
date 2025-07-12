@@ -99,7 +99,7 @@ async function handleRegistrationFormSubmit(e) {
       }
 
       // Save everything
-      await db.collection("service_providers").doc(user.uid).set({
+  await db.collection("service_providers").doc(user.uid).set({
   fullName,
   alias,
   skills,
@@ -107,9 +107,10 @@ async function handleRegistrationFormSubmit(e) {
   idCardUrl,
   conductUrl,
   status: "available",
-  location,
-  registeredAt: new Date(),
+  location: "Not Set", // ✅ Ensure this is saved
+  registeredAt: new Date()
 });
+
 
 
       alert("✅ Registration successful!");
@@ -142,15 +143,16 @@ async function handleRegistrationFormSubmit(e) {
 function displayJobCard(data) {
   console.log("🔥 displayJobCard() called with data:", data);
 
+  // Destructure with fallback defaults
   const {
     fullName = "",
     alias = "",
     skills = "",
     passportUrl = "",
-    idCardUrl = "#",
+    idCardUrl = "#", // fallback
     conductUrl = "#",
-    status = "unavailable",
-    location = "Not Set",
+    status = "unavailable", // fallback to ensure dropdown renders
+    location = "Not Set"
   } = data;
 
   const formContainer = document.getElementById("registration-form-container");
@@ -159,7 +161,7 @@ function displayJobCard(data) {
   formContainer.innerHTML = `
     <div class="job-card">
       <div class="job-card-header">
-        <img src="${passportUrl}" class="job-passport" />
+        <img src="${passportUrl}" alt="Passport" class="job-passport" />
         <div class="job-info">
           <h3>${fullName}</h3>
           <p class="alias">(${alias})</p>
@@ -171,6 +173,7 @@ function displayJobCard(data) {
         <p><a href="${conductUrl}" target="_blank">📎 View Good Conduct</a></p>
       </div>
 
+      <!-- ✅ Status toggle -->
       <div class="status-toggle">
         <label for="availability-toggle">Availability:</label>
         <select id="availability-toggle">
@@ -179,6 +182,7 @@ function displayJobCard(data) {
         </select>
       </div>
 
+      <!-- ✅ Location field -->
       <div class="location-display">
         <label for="location-input">Location:</label>
         <input type="text" id="location-input" value="${location}" placeholder="Enter your location..." />
@@ -188,7 +192,6 @@ function displayJobCard(data) {
     </div>
   `;
 
-  // ✅ Now re-attach listeners
   const user = firebase.auth().currentUser;
   if (!user) return;
 
@@ -203,14 +206,14 @@ function displayJobCard(data) {
       await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
       alert("✅ Status updated!");
 
-      // If status is available, capture new location
+      // Auto-capture location if status is available
       if (newStatus === "available" && "geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(async (position) => {
           const { latitude, longitude } = position.coords;
           const address = await reverseGeocode(latitude, longitude);
           locationInput.value = address;
           await db.collection("service_providers").doc(user.uid).update({ location: address });
-          alert("📍 Auto-updated your location!");
+          alert("📍 Location updated automatically");
         });
       }
     });
