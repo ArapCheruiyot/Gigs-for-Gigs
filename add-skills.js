@@ -1,48 +1,47 @@
-// add-skills.js
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { app } from "./firebase-config.js";
+// Ensure DOM is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+  const skillForm = document.getElementById('skill-form');
+  const newSkillInput = document.getElementById('new-skill');
+  const skillList = document.getElementById('skill-list');
 
-const auth = getAuth(app);
-const db = getFirestore(app);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("skill-form");
-  const skillInput = document.getElementById("new-skill");
-  const skillList = document.getElementById("skill-list");
-
-  // Wait for Firebase Auth to confirm user is logged in
-  onAuthStateChanged(auth, (user) => {
+  // Wait for the user to be authenticated
+  auth.onAuthStateChanged(user => {
     if (user) {
-      const uid = user.uid;
+      const userId = user.uid;
+      const skillsRef = db.collection('serviceProviders').doc(userId).collection('skills');
 
-      form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const skill = skillInput.value.trim();
-        if (!skill) return;
-
-        try {
-          // Add skill to Firestore under providers/{uid}/skills
-          await addDoc(collection(db, "providers", uid, "skills"), {
-            name: skill,
-            addedAt: serverTimestamp()
-          });
-
-          // Optionally display it in the UI
-          const li = document.createElement("li");
-          li.textContent = skill;
+      // Load skills from Firestore
+      skillsRef.get().then(snapshot => {
+        snapshot.forEach(doc => {
+          const li = document.createElement('li');
+          li.textContent = doc.data().name;
           skillList.appendChild(li);
+        });
+      });
 
-          skillInput.value = "";
-        } catch (err) {
-          console.error("Error adding skill:", err);
-          alert("Failed to add skill. Try again.");
-        }
+      // Handle skill form submission
+      skillForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const skillName = newSkillInput.value.trim();
+        if (!skillName) return;
+
+        // Add skill to Firestore
+        skillsRef.add({ name: skillName }).then(docRef => {
+          const li = document.createElement('li');
+          li.textContent = skillName;
+          skillList.appendChild(li);
+          newSkillInput.value = '';
+        }).catch(err => {
+          console.error('Error adding skill:', err);
+        });
       });
 
     } else {
-      console.warn("User not logged in");
-      form.innerHTML = "<p>Please log in to add skills.</p>";
+      console.log('User not logged in');
     }
   });
 });
