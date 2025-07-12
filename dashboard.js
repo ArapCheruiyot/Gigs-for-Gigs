@@ -58,3 +58,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const subTabButtons = document.querySelectorAll(".sub-tab-button");
+  const subTabContents = document.querySelectorAll(".sub-tab-content");
+
+  subTabButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      // Remove 'active' from all buttons & tabs
+      subTabButtons.forEach(btn => btn.classList.remove("active"));
+      subTabContents.forEach(tab => tab.classList.remove("active"));
+
+      // Add 'active' to the clicked tab and button
+      button.classList.add("active");
+      const targetId = button.getAttribute("data-target");
+      document.getElementById(targetId).classList.add("active");
+    });
+  });
+});
