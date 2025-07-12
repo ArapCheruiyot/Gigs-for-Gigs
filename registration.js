@@ -147,7 +147,7 @@ function displayJobCard(data) {
     </div>
   `;
 
-  // Save status to Firestore on change
+  // Update status to Firestore
   const user = firebase.auth().currentUser;
   if (user) {
     const statusSelect = document.getElementById("availability-toggle");
