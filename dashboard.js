@@ -59,19 +59,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 document.addEventListener("DOMContentLoaded", () => {
-  const subTabButtons = document.querySelectorAll(".sub-tab-button");
-  const subTabContents = document.querySelectorAll(".sub-tab-content");
+  const tabButtons = document.querySelectorAll(".tab-button");
+  const tabSections = document.querySelectorAll(".tab-section");
 
-  subTabButtons.forEach(button => {
+  tabButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      // Remove 'active' from all buttons & tabs
-      subTabButtons.forEach(btn => btn.classList.remove("active"));
-      subTabContents.forEach(tab => tab.classList.remove("active"));
-
-      // Add 'active' to the clicked tab and button
-      button.classList.add("active");
       const targetId = button.getAttribute("data-target");
-      document.getElementById(targetId).classList.add("active");
+
+      // Remove active class from all buttons
+      tabButtons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      // Hide all sections
+      tabSections.forEach((section) => {
+        section.classList.remove("active");
+        section.style.display = "none";
+      });
+
+      // Show the target section
+      const targetSection = document.getElementById(targetId) || document.getElementById(`${targetId}-section`);
+      if (targetSection) {
+        targetSection.classList.add("active");
+        targetSection.style.display = "block";
+      }
     });
   });
 });
