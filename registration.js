@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <button type="submit">Submit Registration</button>
         </form>
       `;
+      console.log("🧱 Job card inserted:", formContainer.innerHTML);
 
       const form = document.getElementById("service-provider-form");
       form.addEventListener("submit", handleRegistrationFormSubmit);
