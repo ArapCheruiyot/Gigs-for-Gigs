@@ -30,14 +30,13 @@ document.addEventListener("DOMContentLoaded", () => {
           <button type="submit">Submit Registration</button>
         </form>
       `;
-      console.log("🧱 Job card inserted:", formContainer.innerHTML);
 
       const form = document.getElementById("service-provider-form");
       form.addEventListener("submit", handleRegistrationFormSubmit);
     });
   }
 });
-
+console.log("🧱 Job card inserted:", formContainer.innerHTML);
 if (!window.CLOUD_NAME) window.CLOUD_NAME = "decckqobb";
 if (!window.UPLOAD_PRESET) window.UPLOAD_PRESET = "gigs4gigs_unsigned";
 
