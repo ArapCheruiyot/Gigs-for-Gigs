@@ -103,29 +103,61 @@ body {
   background-color: #0057b8;
 }
 .job-card {
-  border: 2px solid #0077cc;
-  padding: 20px;
+  width: 300px;
+  background-color: #f8f9fa;
+  border: 2px solid #003366;
   border-radius: 10px;
-  max-width: 400px;
-  margin: 20px auto;
-  background-color: #f9f9f9;
-  text-align: center;
+  padding: 15px;
+  margin-top: 1rem;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+  float: left;
 }
 
-.job-card img.job-passport {
-  width: 100px;
+.job-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.job-passport {
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  margin-bottom: 10px;
+  object-fit: cover;
+  border: 2px solid #ccc;
 }
 
-.job-card .badge {
-  margin-top: 15px;
-  background-color: #00c851;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 5px;
-  font-weight: bold;
+.job-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
 }
+
+.alias {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.job-docs a {
+  text-decoration: none;
+  color: #003366;
+  font-size: 0.9rem;
+  margin-right: 10px;
+}
+
+.status-toggle {
+  margin-top: 10px;
+}
+
+.badge {
+  margin-top: 10px;
+  background-color: #003366;
+  color: white;
+  padding: 5px 10px;
+  display: inline-block;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
 .sub-tab-content {
   display: none;
 }
