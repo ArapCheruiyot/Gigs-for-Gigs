@@ -100,16 +100,17 @@ async function handleRegistrationFormSubmit(e) {
 
       // Save everything
       await db.collection("service_providers").doc(user.uid).set({
-        fullName,
-        alias,
-        skills,
-        passportUrl,
-        idCardUrl,
-        conductUrl,
-        status: "available",
-        location, // <- Actual resolved location here
-        registeredAt: new Date(),
-      });
+  fullName,
+  alias,
+  skills,
+  passportUrl,
+  idCardUrl,
+  conductUrl,
+  status: "available",
+  location,
+  registeredAt: new Date(),
+});
+
 
       alert("✅ Registration successful!");
       form.style.display = "none";
@@ -141,97 +142,101 @@ async function handleRegistrationFormSubmit(e) {
 function displayJobCard(data) {
   console.log("🔥 displayJobCard() called with data:", data);
 
+  const {
+    fullName = "",
+    alias = "",
+    skills = "",
+    passportUrl = "",
+    idCardUrl = "#",
+    conductUrl = "#",
+    status = "unavailable",
+    location = "Not Set",
+  } = data;
+
   const formContainer = document.getElementById("registration-form-container");
   formContainer.style.display = "block";
 
   formContainer.innerHTML = `
     <div class="job-card">
       <div class="job-card-header">
-        <img src="${data.passportUrl}" class="job-passport" />
+        <img src="${passportUrl}" class="job-passport" />
         <div class="job-info">
-          <h3>${data.fullName}</h3>
-          <p class="alias">(${data.alias})</p>
+          <h3>${fullName}</h3>
+          <p class="alias">(${alias})</p>
         </div>
       </div>
 
       <div class="job-docs">
-        <p><a href="${data.idCardUrl}" target="_blank">📎 View ID Card</a></p>
-        <p><a href="${data.conductUrl}" target="_blank">📎 View Good Conduct</a></p>
+        <p><a href="${idCardUrl}" target="_blank">📎 View ID Card</a></p>
+        <p><a href="${conductUrl}" target="_blank">📎 View Good Conduct</a></p>
       </div>
 
       <div class="status-toggle">
         <label for="availability-toggle">Availability:</label>
         <select id="availability-toggle">
-          <option value="available" ${data.status === "available" ? "selected" : ""}>✅ Available</option>
-          <option value="unavailable" ${data.status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
+          <option value="available" ${status === "available" ? "selected" : ""}>✅ Available</option>
+          <option value="unavailable" ${status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
         </select>
       </div>
 
       <div class="location-display">
         <label for="location-input">Location:</label>
-        <input type="text" id="location-input" value="${data.location || ""}" placeholder="Enter your location" />
+        <input type="text" id="location-input" value="${location}" placeholder="Enter your location..." />
       </div>
 
       <p class="badge">✅ Verified Service Provider</p>
     </div>
   `;
 
+  // ✅ Now re-attach listeners
   const user = firebase.auth().currentUser;
   if (!user) return;
 
   const db = firebase.firestore();
 
   const statusSelect = document.getElementById("availability-toggle");
+  const locationInput = document.getElementById("location-input");
+
   if (statusSelect) {
     statusSelect.addEventListener("change", async (e) => {
-  const newStatus = e.target.value;
+      const newStatus = e.target.value;
+      await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
+      alert("✅ Status updated!");
 
-  // ✅ Update Firestore with new status
-  await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
-  alert("✅ Availability updated!");
-
-  // ✅ If status is 'available', try to get location
-  if (newStatus === "available") {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
-        const address = await reverseGeocode(latitude, longitude);
-
-        const locationInput = document.getElementById("location-input");
-        if (locationInput) locationInput.value = address;
-
-        await db.collection("service_providers").doc(user.uid).update({ location: address });
-        alert("📍 Location updated: " + address);
-      }, (error) => {
-        alert("⚠️ Could not get location.");
-        console.error("Geolocation error:", error);
-      });
-    } else {
-      alert("❌ Geolocation not supported in this browser.");
-    }
-  }
-});
-
+      // If status is available, capture new location
+      if (newStatus === "available" && "geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const { latitude, longitude } = position.coords;
+          const address = await reverseGeocode(latitude, longitude);
+          locationInput.value = address;
+          await db.collection("service_providers").doc(user.uid).update({ location: address });
+          alert("📍 Auto-updated your location!");
+        });
+      }
+    });
   }
 
-  const locationInput = document.getElementById("location-input");
   if (locationInput) {
     locationInput.addEventListener("blur", async () => {
       const newLocation = locationInput.value.trim();
       if (newLocation) {
         await db.collection("service_providers").doc(user.uid).update({ location: newLocation });
-        alert("📍 Location updated");
+        alert("📍 Location updated manually");
       }
     });
   }
 }
+
 
 // ✅ Show card if already logged in
 firebase.auth().onAuthStateChanged(async (user) => {
   if (user) {
     const doc = await firebase.firestore().collection("service_providers").doc(user.uid).get();
     if (doc.exists) {
-      displayJobCard(doc.data());
+      const data = doc.data();
+      console.log("🔥 Data from Firestore after login:", data); // <-- ADD THIS
+      displayJobCard(data);
     }
   }
 });
+
