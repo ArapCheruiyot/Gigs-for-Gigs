@@ -37,11 +37,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ✅ Declare only once (check before setting)
 if (!window.CLOUD_NAME) window.CLOUD_NAME = "decckqobb";
 if (!window.UPLOAD_PRESET) window.UPLOAD_PRESET = "gigs4gigs_unsigned";
 
-// ✅ Cloudinary Upload Helper
 async function uploadToCloudinary(file) {
   const url = `https://api.cloudinary.com/v1_1/${window.CLOUD_NAME}/upload`;
   const formData = new FormData();
@@ -57,7 +55,6 @@ async function uploadToCloudinary(file) {
   return data.secure_url;
 }
 
-// ✅ Final Working Form Handler
 async function handleRegistrationFormSubmit(e) {
   e.preventDefault();
 
@@ -84,30 +81,29 @@ async function handleRegistrationFormSubmit(e) {
     if (user) {
       const db = firebase.firestore();
       await db.collection("service_providers").doc(user.uid).set({
-  fullName,
-  alias,
-  skills,
-  passportUrl,
-  idCardUrl,
-  conductUrl,
-  status: "available",            // <-- Default status
-  location: "Not Set",            // <-- Placeholder location
-  registeredAt: new Date()
-});
+        fullName,
+        alias,
+        skills,
+        passportUrl,
+        idCardUrl,
+        conductUrl,
+        status: "available",
+        location: "Not Set",
+        registeredAt: new Date()
+      });
 
       alert("✅ Registration successful!");
       form.style.display = "none";
       displayJobCard({
-  fullName,
-  alias,
-  skills,
-  passportUrl,
-  idCardUrl,
-  conductUrl,
-  status: "available",
-  location: "Not Set"
-});
-
+        fullName,
+        alias,
+        skills,
+        passportUrl,
+        idCardUrl,
+        conductUrl,
+        status: "available",
+        location: "Not Set"
+      });
     } else {
       alert("❌ User not authenticated.");
     }
@@ -120,6 +116,7 @@ async function handleRegistrationFormSubmit(e) {
     submitBtn.innerText = "Submit Registration";
   }
 }
+
 function displayJobCard(data) {
   const formContainer = document.getElementById("registration-form-container");
   formContainer.style.display = "block";
@@ -139,7 +136,6 @@ function displayJobCard(data) {
         <p><a href="${data.conductUrl}" target="_blank">📎 View Good Conduct</a></p>
       </div>
 
-      <!-- ✅ Availability -->
       <div class="status-toggle">
         <label for="availability-toggle">Availability:</label>
         <select id="availability-toggle">
@@ -148,7 +144,6 @@ function displayJobCard(data) {
         </select>
       </div>
 
-      <!-- ✅ Location -->
       <div class="location-display" style="margin-top: 10px;">
         <label for="location-input">Location:</label>
         <input type="text" id="location-input" value="${data.location || ''}" placeholder="Enter your location" />
@@ -158,14 +153,11 @@ function displayJobCard(data) {
     </div>
   `;
 
-  // ✅ Attach event listeners after rendering
   const user = firebase.auth().currentUser;
   if (user) {
     const db = firebase.firestore();
 
     const statusSelect = document.getElementById("availability-toggle");
-    const locationInput = document.getElementById("location-input");
-
     if (statusSelect) {
       statusSelect.addEventListener("change", async (e) => {
         const newStatus = e.target.value;
@@ -174,6 +166,7 @@ function displayJobCard(data) {
       });
     }
 
+    const locationInput = document.getElementById("location-input");
     if (locationInput) {
       locationInput.addEventListener("blur", async () => {
         const newLocation = locationInput.value.trim();
@@ -186,61 +179,6 @@ function displayJobCard(data) {
   }
 }
 
-
-    // ✅ Handle status update
-    const statusSelect = document.getElementById("availability-toggle");
-    if (statusSelect) {
-      statusSelect.addEventListener("change", async (e) => {
-        const newStatus = e.target.value;
-        await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
-        alert("✅ Availability status updated!");
-      });
-    }
-
-    // ✅ Handle location update
-    const locationInput = document.getElementById("location-input");
-    if (locationInput) {
-      locationInput.addEventListener("blur", async () => {
-        const newLocation = locationInput.value.trim();
-        if (newLocation) {
-          await db.collection("service_providers").doc(user.uid).update({ location: newLocation });
-          alert("📍 Location updated successfully!");
-        }
-      });
-    }
-  }
-}
-
-
-  const user = firebase.auth().currentUser;
-  if (user) {
-    const db = firebase.firestore();
-
-    // ✅ Update availability
-    const statusSelect = document.getElementById("availability-toggle");
-    if (statusSelect) {
-      statusSelect.addEventListener("change", async (e) => {
-        const newStatus = e.target.value;
-        await db.collection("service_providers").doc(user.uid).update({
-          status: newStatus
-        });
-        alert("Status updated successfully!");
-      });
-    }
-
-    // ✅ Update location
-    const locationInput = document.getElementById("location-input");
-    if (locationInput) {
-      locationInput.addEventListener("blur", async () => {
-        const newLocation = locationInput.value.trim();
-        await db.collection("service_providers").doc(user.uid).update({
-          location: newLocation
-        });
-        alert("Location updated successfully!");
-      });
-    }
-  }
-}
 firebase.auth().onAuthStateChanged(async (user) => {
   if (user) {
     const doc = await firebase.firestore().collection("service_providers").doc(user.uid).get();
@@ -249,4 +187,3 @@ firebase.auth().onAuthStateChanged(async (user) => {
     }
   }
 });
-
