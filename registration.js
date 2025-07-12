@@ -139,6 +139,7 @@ function displayJobCard(data) {
         <p><a href="${data.conductUrl}" target="_blank">📎 View Good Conduct</a></p>
       </div>
 
+      <!-- ✅ Availability Status Toggle -->
       <div class="status-toggle">
         <label for="availability-toggle">Availability:</label>
         <select id="availability-toggle">
@@ -147,14 +148,44 @@ function displayJobCard(data) {
         </select>
       </div>
 
-      <div class="location-display">
+      <!-- ✅ Location Field -->
+      <div class="location-display" style="margin-top: 10px;">
         <label for="location-input">Location:</label>
-        <input type="text" id="location-input" value="${data.location || ''}" placeholder="Enter your location..." />
+        <input type="text" id="location-input" placeholder="Enter your location..." value="${data.location || ''}" />
       </div>
 
       <p class="badge">✅ Verified Service Provider</p>
     </div>
   `;
+
+  const user = firebase.auth().currentUser;
+  if (user) {
+    const db = firebase.firestore();
+
+    // ✅ Handle status update
+    const statusSelect = document.getElementById("availability-toggle");
+    if (statusSelect) {
+      statusSelect.addEventListener("change", async (e) => {
+        const newStatus = e.target.value;
+        await db.collection("service_providers").doc(user.uid).update({ status: newStatus });
+        alert("✅ Availability status updated!");
+      });
+    }
+
+    // ✅ Handle location update
+    const locationInput = document.getElementById("location-input");
+    if (locationInput) {
+      locationInput.addEventListener("blur", async () => {
+        const newLocation = locationInput.value.trim();
+        if (newLocation) {
+          await db.collection("service_providers").doc(user.uid).update({ location: newLocation });
+          alert("📍 Location updated successfully!");
+        }
+      });
+    }
+  }
+}
+
 
   const user = firebase.auth().currentUser;
   if (user) {
