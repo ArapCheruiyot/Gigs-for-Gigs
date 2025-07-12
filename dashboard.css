@@ -73,13 +73,12 @@ body {
 /* 📌 Sub-tabs for Gig Finder (Scoped to #finder only) */
 #finder .gig-finder-tabs {
   display: flex;
-  flex-direction: column;
-  position: absolute;
-  left: 0;
-  top: 20px;
+  flex-direction: row; /* 👈 Horizontal */
+  justify-content: flex-start;
   gap: 10px;
-  padding-left: 20px;
+  margin-bottom: 20px;
 }
+
 
 #finder .sub-tab-button {
   padding: 10px;
