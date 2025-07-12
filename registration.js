@@ -118,6 +118,7 @@ async function handleRegistrationFormSubmit(e) {
 }
 
 function displayJobCard(data) {
+  console.log("🔥 displayJobCard() called with data:", data); // Add this
   const formContainer = document.getElementById("registration-form-container");
   formContainer.style.display = "block";
 
