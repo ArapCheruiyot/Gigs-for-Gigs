@@ -1,24 +1,27 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const postGigBtn = document.getElementById("post-gig-btn"); // Trigger button
-  const gigFormContainer = document.getElementById("gig-form-container");
+// ✅ Reverse Geocode Helper
+async function reverseGeocode(lat, lon) {
+  const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data.display_name || "Unknown Location";
+}
 
+// ✅ Load after DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  const postGigBtn = document.getElementById("post-gig-btn");
+  const gigFormContainer = document.getElementById("gig-form-container");
+  const gigList = document.getElementById("gig-list");
+
+  // ✅ Show form on button click
   if (postGigBtn) {
     postGigBtn.addEventListener("click", () => {
       gigFormContainer.style.display = "block";
 
       gigFormContainer.innerHTML = `
-        <h3>Post a Gig</h3>
         <form id="gig-giver-form">
           <label>What gig can you give?</label>
           <p>I need someone to:</p>
-          <textarea name="taskDescription" rows="4" placeholder="e.g. clean my garden, fix my window..." required></textarea>
-
-          <label>Your Location</label>
-          <input type="text" name="location" placeholder="e.g. Nakuru, Moi Flats" required />
-
-          <label>Phone Number (optional but helpful)</label>
-          <input type="tel" name="phone" placeholder="e.g. 07XXXXXXXX" />
-
+          <textarea name="taskDescription" rows="4" placeholder="e.g. clean my compound..." required></textarea>
           <button type="submit">Submit Gig</button>
         </form>
       `;
@@ -27,38 +30,81 @@ document.addEventListener("DOMContentLoaded", () => {
       form.addEventListener("submit", handleGigSubmission);
     });
   }
-});
-async function handleGigSubmission(e) {
-  e.preventDefault();
 
-  const form = e.target;
-  const taskDescription = form.taskDescription.value.trim();
-  const location = form.location.value.trim();
-  const phone = form.phone.value.trim();
-  const timestamp = new Date();
+  // ✅ Fetch and display existing gigs
+  loadGigs();
 
-  try {
+  // ✅ Submission logic
+  async function handleGigSubmission(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const taskDescription = form.taskDescription.value.trim();
+    const timestamp = new Date();
+
     const user = firebase.auth().currentUser;
     if (!user) {
-      alert("⚠️ You must be logged in to post a gig.");
+      alert("⚠️ You must be logged in.");
       return;
     }
 
-    const db = firebase.firestore();
-    await db.collection("gigs").add({
-      createdBy: user.uid,
-      taskDescription,
-      location,
-      phone,
-      postedAt: timestamp
+    // 🔄 Prompt for location
+    if (!navigator.geolocation) {
+      alert("❌ Location not supported.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude } = position.coords;
+      const location = await reverseGeocode(latitude, longitude);
+
+      // ✅ Save to Firestore
+      try {
+        const db = firebase.firestore();
+        await db.collection("gigs").add({
+          createdBy: user.uid,
+          taskDescription,
+          location,
+          postedAt: timestamp
+        });
+
+        alert("✅ Gig posted successfully!");
+        form.reset();
+        gigFormContainer.style.display = "none";
+        loadGigs(); // Reload gigs
+      } catch (err) {
+        console.error("❌ Error saving gig:", err);
+        alert("Something went wrong.");
+      }
+
+    }, (err) => {
+      console.error("Geolocation error:", err);
+      alert("⚠️ Could not get your location.");
     });
-
-    alert("✅ Gig posted successfully!");
-    form.reset();
-    form.parentElement.style.display = "none";
-
-  } catch (err) {
-    console.error("❌ Error posting gig:", err);
-    alert("Something went wrong. Try again.");
   }
-}
+
+  // ✅ Load and display all gigs
+  async function loadGigs() {
+    const db = firebase.firestore();
+    const snapshot = await db.collection("gigs").orderBy("postedAt", "desc").get();
+
+    gigList.innerHTML = "";
+
+    snapshot.forEach(doc => {
+      const gig = doc.data();
+      const dateStr = gig.postedAt.toDate().toLocaleString();
+
+      const card = document.createElement("div");
+      card.classList.add("gig-card");
+
+      card.innerHTML = `
+        <p><strong>📍 Location:</strong> ${gig.location}</p>
+        <p><strong>📝 Request:</strong> ${gig.taskDescription}</p>
+        <p><small>🕒 Posted: ${dateStr}</small></p>
+        <hr />
+      `;
+
+      gigList.appendChild(card);
+    });
+  }
+});
