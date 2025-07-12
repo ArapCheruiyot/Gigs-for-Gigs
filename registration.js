@@ -172,3 +172,11 @@ function displayJobCard(data) {
     });
   }
 }
+const locationInput = document.getElementById("location-input");
+locationInput.addEventListener("blur", async () => {
+  const newLocation = locationInput.value;
+  await db.collection("service_providers").doc(user.uid).update({
+    location: newLocation
+  });
+  alert("Location updated successfully!");
+});
