@@ -83,6 +83,22 @@ async function handleRegistrationFormSubmit(e) {
     const user = firebase.auth().currentUser;
     if (user) {
       const db = firebase.firestore();
+
+      // Try to get user's location
+      let location = "Not Set";
+      if ("geolocation" in navigator) {
+        try {
+          const position = await new Promise((resolve, reject) =>
+            navigator.geolocation.getCurrentPosition(resolve, reject)
+          );
+          const { latitude, longitude } = position.coords;
+          location = await reverseGeocode(latitude, longitude);
+        } catch (err) {
+          console.warn("Location permission denied or failed:", err);
+        }
+      }
+
+      // Save everything
       await db.collection("service_providers").doc(user.uid).set({
         fullName,
         alias,
@@ -91,7 +107,7 @@ async function handleRegistrationFormSubmit(e) {
         idCardUrl,
         conductUrl,
         status: "available",
-        location: "Not Set",
+        location, // <- Actual resolved location here
         registeredAt: new Date(),
       });
 
@@ -106,7 +122,7 @@ async function handleRegistrationFormSubmit(e) {
         idCardUrl,
         conductUrl,
         status: "available",
-        location: "Not Set",
+        location,
       });
     } else {
       alert("❌ User not authenticated.");
@@ -114,6 +130,10 @@ async function handleRegistrationFormSubmit(e) {
   } catch (err) {
     console.error("Registration failed:", err);
     alert("❌ Something went wrong.");
+  } finally {
+    const submitBtn = form.querySelector("button[type='submit']");
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Submit Registration";
   }
 }
 
