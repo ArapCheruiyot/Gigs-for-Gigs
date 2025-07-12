@@ -118,19 +118,46 @@ async function handleRegistrationFormSubmit(e) {
 }
 function displayJobCard(data) {
   const formContainer = document.getElementById("registration-form-container");
+  formContainer.style.display = "block";
 
   formContainer.innerHTML = `
     <div class="job-card">
-      <img src="${data.passportUrl}" alt="Passport Photo" class="job-passport" />
-      <h3>${data.fullName} (${data.alias})</h3>
-      <p><strong>Skills:</strong> ${data.skills}</p>
+      <div class="job-card-header">
+        <img src="${data.passportUrl}" alt="Passport Photo" class="job-passport" />
+        <div class="job-info">
+          <h3>${data.fullName}</h3>
+          <p class="alias">(${data.alias})</p>
+        </div>
+      </div>
 
       <div class="job-docs">
-        <p><a href="${data.idCardUrl}" target="_blank">View ID Card</a></p>
-        <p><a href="${data.conductUrl}" target="_blank">View Good Conduct</a></p>
+        <p><a href="${data.idCardUrl}" target="_blank">📎 View ID Card</a></p>
+        <p><a href="${data.conductUrl}" target="_blank">📎 View Good Conduct</a></p>
+      </div>
+
+      <div class="status-toggle">
+        <label for="availability-toggle">Availability:</label>
+        <select id="availability-toggle">
+          <option value="available" ${data.status === "available" ? "selected" : ""}>✅ Available</option>
+          <option value="unavailable" ${data.status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
+        </select>
       </div>
 
       <p class="badge">✅ Verified Service Provider</p>
     </div>
   `;
+
+  // Save status to Firestore on change
+  const user = firebase.auth().currentUser;
+  if (user) {
+    const statusSelect = document.getElementById("availability-toggle");
+    statusSelect.addEventListener("change", async (e) => {
+      const newStatus = e.target.value;
+      const db = firebase.firestore();
+      await db.collection("service_providers").doc(user.uid).update({
+        status: newStatus
+      });
+      alert("Status updated successfully!");
+    });
+  }
 }
