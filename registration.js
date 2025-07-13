@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // 🧩 Upload to Cloudinary helper (reuse same setup)
 async function uploadToCloudinary(file) {
   const cloudName = "decckqobb"; // ← your Cloudinary cloud name
-  const uploadPreset = "unsigned_preset"; // ← your preset (no auth needed)
+  const uploadPreset = "gigs4gigs_unsigned"; // ← your preset (no auth needed)
 
   const formData = new FormData();
   formData.append("file", file);
