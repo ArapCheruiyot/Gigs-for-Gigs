@@ -147,3 +147,45 @@ function displayJobCard(data) {
     </div>
   `;
 }
+function setupStatusAndLocation(userId) {
+  const db = firebase.firestore();
+  const statusSelect = document.getElementById("availability-toggle");
+  const locationInput = document.getElementById("location-input");
+
+  if (!statusSelect || !locationInput) {
+    console.warn("⚠️ Status or Location elements not found in DOM.");
+    return;
+  }
+
+  // 🔘 Handle status change
+  statusSelect.addEventListener("change", async (e) => {
+    const newStatus = e.target.value;
+
+    await db.collection("service_providers").doc(userId).update({ status: newStatus });
+    alert("✅ Availability updated");
+
+    if (newStatus === "available" && "geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        const address = await reverseGeocode(latitude, longitude);
+        locationInput.value = address;
+
+        await db.collection("service_providers").doc(userId).update({ location: address });
+        alert("📍 Location captured automatically");
+      });
+    } else {
+      // Unavailable: mark location as Not Set
+      locationInput.value = "Not Set";
+      await db.collection("service_providers").doc(userId).update({ location: "Not Set" });
+    }
+  });
+
+  // 📍 Handle manual edit
+  locationInput.addEventListener("blur", async () => {
+    const newLocation = locationInput.value.trim();
+    if (newLocation) {
+      await db.collection("service_providers").doc(userId).update({ location: newLocation });
+      alert("📍 Location updated manually");
+    }
+  });
+}
