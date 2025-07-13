@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formContainer.innerHTML = `
       <div class="job-card">
         <h2>Service Provider Registration</h2>
-        
+
         <label for="fullName">Full Name:</label>
         <input type="text" id="fullName" placeholder="Enter full name" />
 
@@ -30,27 +30,26 @@ document.addEventListener("DOMContentLoaded", () => {
         <button id="submit-registration">Submit Registration</button>
       </div>
     `;
+
+    // ✅ Now add the event listener after injecting the HTML
+    document.getElementById("submit-registration").addEventListener("click", async () => {
+      const fullName = document.getElementById("fullName").value.trim();
+      const alias = document.getElementById("alias").value.trim();
+      const skills = document.getElementById("skills").value.trim();
+
+      const passportFile = document.getElementById("passport").files[0];
+      const idCardFile = document.getElementById("idCard").files[0];
+      const conductFile = document.getElementById("conduct").files[0];
+
+      if (!fullName || !alias || !skills || !passportFile || !idCardFile || !conductFile) {
+        alert("❌ Please fill in all fields and upload all documents.");
+        return;
+      }
+
+      console.log("📦 Form Data:");
+      console.log({ fullName, alias, skills, passportFile, idCardFile, conductFile });
+
+      alert("🚧 Upload and submission logic coming next...");
+    });
   });
-});
-// Add this after setting formContainer.innerHTML
-document.getElementById("submit-registration").addEventListener("click", async () => {
-  const fullName = document.getElementById("fullName").value.trim();
-  const alias = document.getElementById("alias").value.trim();
-  const skills = document.getElementById("skills").value.trim();
-
-  const passportFile = document.getElementById("passport").files[0];
-  const idCardFile = document.getElementById("idCard").files[0];
-  const conductFile = document.getElementById("conduct").files[0];
-
-  // Simple validation
-  if (!fullName || !alias || !skills || !passportFile || !idCardFile || !conductFile) {
-    alert("❌ Please fill in all fields and upload all documents.");
-    return;
-  }
-
-  // For now, just log the data to confirm
-  console.log("📦 Form Data:");
-  console.log({ fullName, alias, skills, passportFile, idCardFile, conductFile });
-
-  alert("🚧 Upload and submission logic coming next...");
 });
