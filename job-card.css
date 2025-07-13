@@ -1,0 +1,101 @@
+/* job-card.css */
+
+/* 🪪 Job Card Container */
+.job-card {
+  width: 300px;
+  background-color: #ffffff;
+  border: 2px solid #004080;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin: 20px 0;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* 👤 Header with Photo & Name */
+.job-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.job-passport {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+.job-info h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #003366;
+}
+.job-info .alias {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* 📄 Links to Documents */
+.job-docs a {
+  display: block;
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #0077cc;
+  text-decoration: none;
+}
+.job-docs a:hover {
+  text-decoration: underline;
+}
+
+/* 💼 Skills, 📍 Location, 🟢 Status */
+.job-card .skills,
+.job-card .status,
+.job-card .location {
+  margin: 8px 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* 🔘 Availability Toggle */
+.status-toggle {
+  margin-top: 15px;
+}
+.status-toggle label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+.status-toggle select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* 📍 Location Input */
+.location-display {
+  margin-top: 15px;
+}
+.location-display label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.location-display input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* ✅ Badge */
+.badge {
+  margin-top: 15px;
+  padding: 6px 12px;
+  display: inline-block;
+  background-color: #003366;
+  color: white;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
