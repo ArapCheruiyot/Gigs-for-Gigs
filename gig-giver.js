@@ -98,4 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
 
   gigList.appendChild(card);
+  console.log("Appended gig card:", card.outerHTML);
+      
 });
