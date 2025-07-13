@@ -6,17 +6,14 @@ async function reverseGeocode(lat, lon) {
   return data.display_name || "Unknown Location";
 }
 
-// ✅ Load after DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   const postGigBtn = document.getElementById("post-gig-btn");
   const gigFormContainer = document.getElementById("gig-form-container");
   const gigList = document.getElementById("gig-list");
 
-  // ✅ Show form on button click
   if (postGigBtn) {
     postGigBtn.addEventListener("click", () => {
       gigFormContainer.style.display = "block";
-
       gigFormContainer.innerHTML = `
         <form id="gig-giver-form">
           <label>What gig can you give?</label>
@@ -31,24 +28,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ✅ Fetch and display existing gigs
-  loadGigs();
+  loadGigs(); // initial gig loading
 
-  // ✅ Submission logic
   async function handleGigSubmission(e) {
     e.preventDefault();
 
     const form = e.target;
     const taskDescription = form.taskDescription.value.trim();
     const timestamp = new Date();
-
     const user = firebase.auth().currentUser;
+
     if (!user) {
       alert("⚠️ You must be logged in.");
       return;
     }
 
-    // 🔄 Prompt for location
     if (!navigator.geolocation) {
       alert("❌ Location not supported.");
       return;
@@ -58,7 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const { latitude, longitude } = position.coords;
       const location = await reverseGeocode(latitude, longitude);
 
-      // ✅ Save to Firestore
       try {
         const db = firebase.firestore();
         await db.collection("gigs").add({
@@ -71,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("✅ Gig posted successfully!");
         form.reset();
         gigFormContainer.style.display = "none";
-        loadGigs(); // Reload gigs
+        loadGigs(); // Refresh after posting
       } catch (err) {
         console.error("❌ Error saving gig:", err);
         alert("Something went wrong.");
@@ -83,7 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ✅ Load and display all gigs
   async function loadGigs() {
     const db = firebase.firestore();
     const snapshot = await db.collection("gigs").orderBy("postedAt", "desc").get();
@@ -98,10 +90,11 @@ document.addEventListener("DOMContentLoaded", () => {
       card.classList.add("gig-card");
 
       card.innerHTML = `
-        <p><strong>📍 Location:</strong> ${gig.location}</p>
-        <p><strong>📝 Request:</strong> ${gig.taskDescription}</p>
-        <p><small>🕒 Posted: ${dateStr}</small></p>
-        <hr />
+        <div class="gig-task">📝 I need someone to: ${gig.taskDescription}</div>
+        <div class="gig-meta">
+          📍 ${gig.location}<br />
+          🕒 ${dateStr}
+        </div>
       `;
 
       gigList.appendChild(card);
