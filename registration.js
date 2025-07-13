@@ -147,45 +147,56 @@ function displayJobCard(data) {
     </div>
   `;
 }
+// ✅ Setup status & location behavior after login
 function setupStatusAndLocation(userId) {
-  const db = firebase.firestore();
-  const statusSelect = document.getElementById("availability-toggle");
+  const statusDropdown = document.getElementById("availability-toggle");
   const locationInput = document.getElementById("location-input");
 
-  if (!statusSelect || !locationInput) {
+  if (!statusDropdown || !locationInput) {
     console.warn("⚠️ Status or Location elements not found in DOM.");
     return;
   }
 
-  // 🔘 Handle status change
-  statusSelect.addEventListener("change", async (e) => {
-    const newStatus = e.target.value;
+  // 👀 Listen for status change
+  statusDropdown.addEventListener("change", async () => {
+    const newStatus = statusDropdown.value;
+    const db = firebase.firestore();
 
-    await db.collection("service_providers").doc(userId).update({ status: newStatus });
-    alert("✅ Availability updated");
+    await db.collection("service_providers").doc(userId).update({
+      status: newStatus
+    });
 
-    if (newStatus === "available" && "geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        const { latitude, longitude } = position.coords;
-        const address = await reverseGeocode(latitude, longitude);
-        locationInput.value = address;
+    if (newStatus === "available") {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            const address = `Lat: ${latitude.toFixed(4)}, Lng: ${longitude.toFixed(4)}`;
+            locationInput.value = address;
 
-        await db.collection("service_providers").doc(userId).update({ location: address });
-        alert("📍 Location captured automatically");
-      });
+            await db.collection("service_providers").doc(userId).update({
+              location: address
+            });
+
+            alert("📍 Location captured successfully.");
+          },
+          (error) => {
+            console.warn("⚠️ Location capture denied or failed.");
+            locationInput.value = "Not Set";
+            db.collection("service_providers").doc(userId).update({
+              location: "Not Set"
+            });
+          }
+        );
+      } else {
+        alert("❌ Geolocation is not supported by your browser.");
+      }
     } else {
-      // Unavailable: mark location as Not Set
+      // If unavailable, clear location
       locationInput.value = "Not Set";
-      await db.collection("service_providers").doc(userId).update({ location: "Not Set" });
-    }
-  });
-
-  // 📍 Handle manual edit
-  locationInput.addEventListener("blur", async () => {
-    const newLocation = locationInput.value.trim();
-    if (newLocation) {
-      await db.collection("service_providers").doc(userId).update({ location: newLocation });
-      alert("📍 Location updated manually");
+      await firebase.firestore().collection("service_providers").doc(userId).update({
+        location: "Not Set"
+      });
     }
   });
 }
