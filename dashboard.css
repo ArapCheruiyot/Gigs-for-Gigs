@@ -140,63 +140,6 @@ body {
   background-color: #0057b8;
 }
 
-/* 🪪 Job Card Styles */
-.job-card {
-  width: 280px;
-  background-color: #fefefe;
-  border: 2px solid #003366;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-}
-.job-card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.job-passport {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 2px solid #ccc;
-}
-.job-info h3 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-.alias {
-  font-size: 0.9rem;
-  color: #777;
-}
-.job-docs a {
-  display: block;
-  margin: 5px 0;
-  font-size: 0.9rem;
-  color: #004080;
-  text-decoration: none;
-}
-.status-toggle {
-  margin-top: 10px;
-}
-.status-toggle select {
-  width: 100%;
-  padding: 6px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.badge {
-  margin-top: 12px;
-  display: inline-block;
-  padding: 6px 12px;
-  background-color: #003366;
-  color: white;
-  border-radius: 5px;
-  font-size: 0.85rem;
-}
-
 /* 📚 Other Sub‑tabs */
 .sub-tab-content {
   display: none;
@@ -204,22 +147,3 @@ body {
 .sub-tab-content.active {
   display: block;
 }
-
-
-.location-display {
-  margin-top: 15px;
-}
-
-.location-display label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.location-display input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
