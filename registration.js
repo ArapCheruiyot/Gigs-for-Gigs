@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = docSnap.data();
       console.log("🔥 Data from Firestore after login:", data);
       displayJobCard(data);
+      setupStatusAndLocation(user.uid);
     } else {
       registerBtn.style.display = "block";
     }
