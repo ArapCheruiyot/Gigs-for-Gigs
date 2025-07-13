@@ -113,3 +113,37 @@ async function uploadToCloudinary(file) {
   if (!res.ok) throw new Error(data.error?.message || "Upload failed");
   return data.secure_url;
 }
+function displayJobCard(data) {
+  const formContainer = document.getElementById("registration-form-container");
+  formContainer.style.display = "block";
+
+  const {
+    fullName = "",
+    alias = "",
+    skills = "",
+    passportUrl = "",
+    idCardUrl = "#",
+    conductUrl = "#"
+  } = data;
+
+  formContainer.innerHTML = `
+    <div class="job-card">
+      <div class="job-card-header">
+        <img src="${passportUrl}" alt="Passport" class="job-passport" />
+        <div class="job-info">
+          <h3>${fullName}</h3>
+          <p class="alias">(${alias})</p>
+        </div>
+      </div>
+
+      <div class="job-docs">
+        <p><a href="${idCardUrl}" target="_blank">📎 View ID Card</a></p>
+        <p><a href="${conductUrl}" target="_blank">📎 View Good Conduct</a></p>
+      </div>
+
+      <div class="skills">🛠️ Skills: ${skills}</div>
+
+      <p class="badge">✅ Verified Service Provider</p>
+    </div>
+  `;
+}
