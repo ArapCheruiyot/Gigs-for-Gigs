@@ -83,21 +83,17 @@ document.addEventListener("DOMContentLoaded", () => {
     gigList.innerHTML = "";
 
     snapshot.forEach(doc => {
-      const gig = doc.data();
-      const dateStr = gig.postedAt.toDate().toLocaleString();
+  const gig = doc.data();
+  const dateStr = gig.postedAt.toDate().toLocaleString();
 
-      const card = document.createElement("div");
-      card.classList.add("gig-card");
+  const card = document.createElement("div");
+  card.classList.add("gig-card");
 
-      card.innerHTML = `
-        <div class="gig-task">📝 I need someone to: ${gig.taskDescription}</div>
-        <div class="gig-meta">
-          📍 ${gig.location}<br />
-          🕒 ${dateStr}
-        </div>
-      `;
+  card.innerHTML = `
+    <div class="gig-task">📝 I need someone to: ${gig.taskDescription}</div>
+    <div class="gig-meta">📍 ${gig.location}</div>
+    <div class="gig-meta">🕒 ${dateStr}</div>
+  `;
 
-      gigList.appendChild(card);
-    });
-  }
+  gigList.appendChild(card);
 });
