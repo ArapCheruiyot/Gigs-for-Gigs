@@ -61,54 +61,28 @@
   </div>
 
   <!-- ✅ Tabs Content Area -->
-  <div class="gig-finder-content">
-    
-    <!-- 🧍 Profile Tab -->
-    <div id="profile-tab" class="sub-tab-content active">
-      <button id="register-btn">Register as a Service Provider</button>
-      <!-- 🌍 Location and Status Section (initially hidden, shown after login if user has profile) -->
-<div id="status-location-wrapper" style="display: none; margin-top: 20px;">
-  
-  <!-- ✅ Availability dropdown -->
-  <div class="status-toggle">
-    <label for="availability-toggle">Availability:</label>
-    <select id="availability-toggle">
-      <option value="available">✅ Available</option>
-      <option value="unavailable">⛔ Not Available</option>
-    </select>
-  </div>
+<div id="profile-tab" class="sub-tab-content active">
+  <button id="register-btn">Register as a Service Provider</button>
 
-  <!-- 📍 Location input field -->
-  <div class="location-display">
-    <label for="location-input">Location:</label>
-    <input type="text" id="location-input" placeholder="Enter your location..." />
-  </div>
-
-</div>
-
-<div id="registration-form-container" style="display: none;"></div>
-      
-
+  <!-- 🆕 Inject this block below -->
+  <div id="status-location-wrapper" style="display: block; margin-top: 20px;">
+    <div class="status-toggle">
+      <label for="availability-toggle">Availability:</label>
+      <select id="availability-toggle">
+        <option value="available">✅ Available</option>
+        <option value="unavailable">⛔ Not Available</option>
+      </select>
     </div>
-<!-- 🌍 Location and Status Section (initially hidden, shown after login if user has profile) -->
-<div id="status-location-wrapper" style="display: none; margin-top: 20px;">
-  
-  <!-- ✅ Availability dropdown -->
-  <div class="status-toggle">
-    <label for="availability-toggle">Availability:</label>
-    <select id="availability-toggle">
-      <option value="available">✅ Available</option>
-      <option value="unavailable">⛔ Not Available</option>
-    </select>
+
+    <div class="location-display">
+      <label for="location-input">Location:</label>
+      <input type="text" id="location-input" placeholder="Enter your location..." />
+    </div>
   </div>
 
-  <!-- 📍 Location input field -->
-  <div class="location-display">
-    <label for="location-input">Location:</label>
-    <input type="text" id="location-input" placeholder="Enter your location..." />
-  </div>
-
+  <div id="registration-form-container" style="display: none;"></div>
 </div>
+
 
     <!-- ⚡ Activity Tab -->
     <div id="activity-tab" class="sub-tab-content">
