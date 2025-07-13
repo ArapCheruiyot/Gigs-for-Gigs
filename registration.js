@@ -1,14 +1,32 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const registerBtn = document.getElementById("register-btn");
   const formContainer = document.getElementById("registration-form-container");
 
+  // 🔥 Firebase auth state
+  firebase.auth().onAuthStateChanged(async (user) => {
+    if (!user) return;
+
+    const db = firebase.firestore();
+    const docRef = db.collection("service_providers").doc(user.uid);
+    const docSnap = await docRef.get();
+
+    if (docSnap.exists) {
+      const data = docSnap.data();
+      console.log("🔥 Data from Firestore after login:", data);
+      displayJobCard(data);
+    } else {
+      registerBtn.style.display = "block";
+    }
+  });
+
+  // 🧾 Show form on button click
   registerBtn.addEventListener("click", () => {
     formContainer.style.display = "block";
 
     formContainer.innerHTML = `
       <div class="job-card">
         <h2>Service Provider Registration</h2>
-        
+
         <label for="fullName">Full Name:</label>
         <input type="text" id="fullName" placeholder="Enter full name" />
 
@@ -31,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // 🧠 Attach click after form renders
+    // 📦 Submit form logic
     document.getElementById("submit-registration").addEventListener("click", async () => {
       const fullName = document.getElementById("fullName").value.trim();
       const alias = document.getElementById("alias").value.trim();
@@ -54,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const user = firebase.auth().currentUser;
         const db = firebase.firestore();
 
-        await db.collection("service_providers").doc(user.uid).set({
+        const data = {
           fullName,
           alias,
           skills,
@@ -62,9 +80,13 @@ document.addEventListener("DOMContentLoaded", () => {
           idCardUrl,
           conductUrl,
           registeredAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        };
 
+        await db.collection("service_providers").doc(user.uid).set(data);
         alert("✅ Registration successful!");
+
+        formContainer.style.display = "none";
+        displayJobCard(data); // 🪪 Show the card
       } catch (err) {
         console.error("❌ Upload failed:", err);
         alert("Something went wrong. Please try again.");
@@ -73,10 +95,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// 🧩 Upload to Cloudinary helper (reuse same setup)
+// ☁️ Upload helper
 async function uploadToCloudinary(file) {
-  const cloudName = "decckqobb"; // ← your Cloudinary cloud name
-  const uploadPreset = "gigs4gigs_unsigned"; // ← your preset (no auth needed)
+  const cloudName = "decckqobb"; // Your Cloudinary cloud name
+  const uploadPreset = "gigs4gigs_unsigned"; // Your unsigned preset
 
   const formData = new FormData();
   formData.append("file", file);
@@ -88,5 +110,6 @@ async function uploadToCloudinary(file) {
   });
 
   const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || "Upload failed");
   return data.secure_url;
 }
