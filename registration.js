@@ -32,3 +32,25 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   });
 });
+// Add this after setting formContainer.innerHTML
+document.getElementById("submit-registration").addEventListener("click", async () => {
+  const fullName = document.getElementById("fullName").value.trim();
+  const alias = document.getElementById("alias").value.trim();
+  const skills = document.getElementById("skills").value.trim();
+
+  const passportFile = document.getElementById("passport").files[0];
+  const idCardFile = document.getElementById("idCard").files[0];
+  const conductFile = document.getElementById("conduct").files[0];
+
+  // Simple validation
+  if (!fullName || !alias || !skills || !passportFile || !idCardFile || !conductFile) {
+    alert("❌ Please fill in all fields and upload all documents.");
+    return;
+  }
+
+  // For now, just log the data to confirm
+  console.log("📦 Form Data:");
+  console.log({ fullName, alias, skills, passportFile, idCardFile, conductFile });
+
+  alert("🚧 Upload and submission logic coming next...");
+});
