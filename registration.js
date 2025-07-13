@@ -174,22 +174,26 @@ function displayJobCard(data) {
       </div>
 
       <!-- ✅ Status toggle -->
-      <div class="status-toggle">
-        <label for="availability-toggle">Availability:</label>
-        <select id="availability-toggle">
-          <option value="available" ${status === "available" ? "selected" : ""}>✅ Available</option>
-          <option value="unavailable" ${status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
-        </select>
-      </div>
+  <!-- 📌 Read-only Fields -->
+<div class="skills"><strong>Skills:</strong> ${skills}</div>
+<div class="status"><strong>Status:</strong> ${status}</div>
+<div class="location"><strong>Location:</strong> ${location}</div>
 
-      <!-- ✅ Location field -->
-      <div class="location-display">
-        <label for="location-input">Location:</label>
-        <input type="text" id="location-input" value="${location}" placeholder="Enter your location..." />
-      </div>
+<!-- ✅ Status toggle (editable) -->
+<div class="status-toggle">
+  <label for="availability-toggle">Update Availability:</label>
+  <select id="availability-toggle">
+    <option value="available" ${status === "available" ? "selected" : ""}>✅ Available</option>
+    <option value="unavailable" ${status === "unavailable" ? "selected" : ""}>⛔ Not Available</option>
+  </select>
+</div>
 
-      <p class="badge">✅ Verified Service Provider</p>
-    </div>
+<!-- ✅ Location input (editable) -->
+<div class="location-display">
+  <label for="location-input">Update Location:</label>
+  <input type="text" id="location-input" value="${location}" placeholder="Enter your location..." />
+</div>
+
   `;
 
   const user = firebase.auth().currentUser;
