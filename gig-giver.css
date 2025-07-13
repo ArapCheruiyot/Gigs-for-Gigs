@@ -114,3 +114,24 @@
   color: #555;
   line-height: 1.4;
 }
+/* 🟦 Gig Card Style */
+.gig-card {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-left: 6px solid #004080;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 0.95rem;
+}
+
+/* Container holding all gig cards */
+#gig-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align cards to the left */
+  margin-top: 20px;
+}
+
