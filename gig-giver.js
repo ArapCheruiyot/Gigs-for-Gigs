@@ -77,6 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function loadGigs() {
+    console.log("Gigs fetched:", snapshot.size); // Add this in loadGigs()
+
     const db = firebase.firestore();
     const snapshot = await db.collection("gigs").orderBy("postedAt", "desc").get();
 
