@@ -3,22 +3,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   const formContainer = document.getElementById("registration-form-container");
 
   // 🔥 Firebase auth state
-  firebase.auth().onAuthStateChanged(async (user) => {
-    if (!user) return;
-
-    const db = firebase.firestore();
-    const docRef = db.collection("service_providers").doc(user.uid);
-    const docSnap = await docRef.get();
-
-    if (docSnap.exists) {
-      const data = docSnap.data();
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (user) {
+    const doc = await firebase.firestore().collection("service_providers").doc(user.uid).get();
+    if (doc.exists) {
+      const data = doc.data();
       console.log("🔥 Data from Firestore after login:", data);
       displayJobCard(data);
-      setupStatusAndLocation(user.uid);
-    } else {
-      registerBtn.style.display = "block";
+
+      // 👇 Give time for job card to render
+      setTimeout(() => {
+        setupStatusAndLocation(user.uid);
+      }, 0);
     }
-  });
+  }
+});
 
   // 🧾 Show form on button click
   registerBtn.addEventListener("click", () => {
