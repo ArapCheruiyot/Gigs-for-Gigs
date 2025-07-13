@@ -1,40 +1,225 @@
-/* 🎯 Gig Giver Section */
-#gig-form-container {
-  background-color: #ffffff;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  max-width: 500px;
+/* 🌍 Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f6f8fc;
 }
 
-/* 📦 Gig Cards Container */
-#gig-list {
+/* 🦸 Hero Section */
+.hero {
+  background-color: #004080;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+.hero-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 900px;
+  margin: auto;
+}
+#welcome-message { font-size: 1.5rem; }
+#logout-btn {
+  background-color: #db4437;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* 🔵 Main Tab Buttons */
+.tabs {
+  display: flex;
+  justify-content: center;
+  background-color: #e4e4e4;
+  padding: 10px 0;
+}
+.tab-button {
+  padding: 10px 30px;
+  margin: 0 5px;
+  border: none;
+  background-color: #ccc;
+  cursor: pointer;
+  font-weight: bold;
+}
+.tab-button.active {
+  background-color: #0077cc;
+  color: white;
+}
+
+/* 📦 Main Tab Sections */
+.tab-section {
+  display: none;
+  padding: 20px;
+  max-width: 1000px;
+  margin: auto;
+  position: relative;
+}
+.tab-section.active {
+  display: block;
+}
+
+/* 📌 Sub‑tabs inside #finder */
+#finder .gig-finder-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+#finder .sub-tab-button {
+  padding: 10px 20px;
+  background-color: #ccc;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+#finder .sub-tab-button.active {
+  background-color: #003366;
+  color: white;
+}
+
+/* 🧾 Sub‑tab Content Wrapper */
+.gig-finder-content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+/* 📑 Hide form & job card by default */
+#registration-form-container,
+.job-card {
+  display: none;
+}
+
+/* 👇 Profile Tab: show & stack vertically */
+#profile-tab.active {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: flex-start;
+  gap: 20px;
+}
+#profile-tab.active #registration-form-container,
+#profile-tab.active .job-card {
+  display: block;
 }
 
-/* 🧱 Individual Gig Card */
-.gig-card {
-  background-color: #fefefe;
-  border: 2px solid #004080;
-  border-left: 6px solid #004080;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  max-width: 400px;
-  font-size: 0.95rem;
+/* 📝 Registration Form Container */
+#registration-form-container {
+  background-color: #f8f9ff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: auto;
 }
-
-.gig-card .gig-task {
+#registration-form-container label {
   font-weight: bold;
-  margin-bottom: 8px;
-  color: #222;
+  color: #333;
+  margin-top: 10px;
+  display: block;
+}
+#registration-form-container input[type="text"],
+#registration-form-container input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+#registration-form-container button {
+  padding: 10px 20px;
+  background-color: #004080;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+#registration-form-container button:hover {
+  background-color: #0057b8;
 }
 
-.gig-card .gig-meta {
-  font-size: 0.85rem;
-  color: #555;
-  margin-top: 8px;
+/* 🪪 Job Card Styles */
+.job-card {
+  width: 280px;
+  background-color: #fefefe;
+  border: 2px solid #003366;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
 }
+.job-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.job-passport {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+.job-info h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+.alias {
+  font-size: 0.9rem;
+  color: #777;
+}
+.job-docs a {
+  display: block;
+  margin: 5px 0;
+  font-size: 0.9rem;
+  color: #004080;
+  text-decoration: none;
+}
+.status-toggle {
+  margin-top: 10px;
+}
+.status-toggle select {
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.badge {
+  margin-top: 12px;
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #003366;
+  color: white;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+/* 📚 Other Sub‑tabs */
+.sub-tab-content {
+  display: none;
+}
+.sub-tab-content.active {
+  display: block;
+}
+
+
+.location-display {
+  margin-top: 15px;
+}
+
+.location-display label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.location-display input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
