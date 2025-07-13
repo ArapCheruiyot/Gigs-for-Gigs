@@ -149,54 +149,54 @@ function displayJobCard(data) {
 }
 // ✅ Setup status & location behavior after login
 function setupStatusAndLocation(userId) {
-  const statusDropdown = document.getElementById("availability-toggle");
+  const statusSelect = document.getElementById("availability-toggle");
   const locationInput = document.getElementById("location-input");
 
-  if (!statusDropdown || !locationInput) {
+  if (!statusSelect || !locationInput) {
     console.warn("⚠️ Status or Location elements not found in DOM.");
     return;
   }
 
-  // 👀 Listen for status change
-  statusDropdown.addEventListener("change", async () => {
-    const newStatus = statusDropdown.value;
-    const db = firebase.firestore();
+  const db = firebase.firestore();
 
-    await db.collection("service_providers").doc(userId).update({
-      status: newStatus
-    });
+  // When user changes availability
+  statusSelect.addEventListener("change", async () => {
+    const newStatus = statusSelect.value;
 
+    // 1️⃣ Save status
+    await db.collection("service_providers").doc(userId).update({ status: newStatus });
+    console.log("✅ Status saved to Firebase:", newStatus);
+
+    // 2️⃣ If available, get location
     if (newStatus === "available") {
       if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            const address = `Lat: ${latitude.toFixed(4)}, Lng: ${longitude.toFixed(4)}`;
+            const address = await reverseGeocode(latitude, longitude);
             locationInput.value = address;
 
-            await db.collection("service_providers").doc(userId).update({
-              location: address
-            });
-
-            alert("📍 Location captured successfully.");
+            // Save location to Firebase
+            await db.collection("service_providers").doc(userId).update({ location: address });
+            console.log("📍 Location saved to Firebase:", address);
           },
-          (error) => {
-            console.warn("⚠️ Location capture denied or failed.");
+          async (error) => {
+            console.warn("❌ Location access denied");
             locationInput.value = "Not Set";
-            db.collection("service_providers").doc(userId).update({
-              location: "Not Set"
-            });
+
+            await db.collection("service_providers").doc(userId).update({ location: "Not Set" });
           }
         );
       } else {
-        alert("❌ Geolocation is not supported by your browser.");
+        alert("❌ Your browser does not support geolocation.");
+        locationInput.value = "Not Set";
+        await db.collection("service_providers").doc(userId).update({ location: "Not Set" });
       }
     } else {
-      // If unavailable, clear location
+      // 3️⃣ If unavailable, set location to "Not Set"
       locationInput.value = "Not Set";
-      await firebase.firestore().collection("service_providers").doc(userId).update({
-        location: "Not Set"
-      });
+      await db.collection("service_providers").doc(userId).update({ location: "Not Set" });
+      console.log("📍 Location cleared due to unavailability");
     }
   });
 }
